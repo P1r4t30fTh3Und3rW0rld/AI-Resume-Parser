@@ -8,6 +8,7 @@ const FormData = require('form-data');
 const fs = require('fs');
 const mongoose = require('mongoose');
 const { MongoClient, GridFSBucket } = require('mongodb');
+const crypto = require('crypto');
 
 const app = express();
 app.use(cors());
@@ -45,7 +46,8 @@ const resumeSchema = new mongoose.Schema({
   links: [String],
   fileId: mongoose.Schema.Types.ObjectId,
   filename: String,
-  uploadDate: Date
+  uploadDate: Date,
+  hash: String
 }, { timestamps: true });
 
 const Resume = mongoose.model('Resume', resumeSchema);
@@ -56,7 +58,48 @@ app.post('/upload', upload.single('resume'), async (req, res) => {
   }
 
   let fileId = null;
+  let fileHash = null;
+  let deduplicated = false;
   try {
+    // Compute SHA-256 hash of the file
+    const hash = crypto.createHash('sha256');
+    const fileBuffer = fs.readFileSync(req.file.path);
+    hash.update(fileBuffer);
+    fileHash = hash.digest('hex');
+
+    // Connect to MongoDB and GridFS
+    const client = new MongoClient(process.env.MONGO_URI);
+    await client.connect();
+    const db = client.db();
+    const bucket = new GridFSBucket(db);
+
+    // Check for existing file with the same hash
+    const existing = await bucket.find({ 'metadata.hash': fileHash }).toArray();
+    if (existing.length > 0) {
+      // File already exists, use its fileId
+      fileId = existing[0]._id;
+      deduplicated = true;
+    } else {
+      // Store file in GridFS with hash as metadata
+      const uploadStream = bucket.openUploadStream(req.file.originalname, {
+        contentType: req.file.mimetype,
+        metadata: { hash: fileHash }
+      });
+      await new Promise((resolve, reject) => {
+        fs.createReadStream(req.file.path)
+          .pipe(uploadStream)
+          .on('error', (error) => {
+            client.close();
+            reject(error);
+          })
+          .on('finish', () => {
+            fileId = uploadStream.id;
+            client.close();
+            resolve();
+          });
+      });
+    }
+
     // Prepare form data for FastAPI
     const form = new FormData();
     form.append('file', fs.createReadStream(req.file.path), req.file.originalname);
@@ -68,35 +111,14 @@ app.post('/upload', upload.single('resume'), async (req, res) => {
       maxBodyLength: Infinity,
     });
 
-    // Store file in GridFS
-    const client = new MongoClient(process.env.MONGO_URI);
-    await client.connect();
-    const db = client.db();
-    const bucket = new GridFSBucket(db);
-    const uploadStream = bucket.openUploadStream(req.file.originalname, {
-      contentType: req.file.mimetype,
-    });
-    await new Promise((resolve, reject) => {
-      fs.createReadStream(req.file.path)
-        .pipe(uploadStream)
-        .on('error', (error) => {
-          client.close();
-          reject(error);
-        })
-        .on('finish', () => {
-          fileId = uploadStream.id;
-          client.close();
-          resolve();
-        });
-    });
-
     // Save parsed data and fileId to resumes collection
     const resumeDoc = new Resume({
       raw_text: response.data.raw_text,
       links: response.data.links,
       fileId: fileId,
       filename: req.file.originalname,
-      uploadDate: new Date()
+      uploadDate: new Date(),
+      hash: fileHash
     });
     await resumeDoc.save();
 
@@ -108,7 +130,9 @@ app.post('/upload', upload.single('resume'), async (req, res) => {
       message: 'File uploaded and parsed successfully',
       parsed: response.data,
       fileId: fileId,
-      resumeId: resumeDoc._id
+      hash: fileHash,
+      resumeId: resumeDoc._id,
+      deduplicated: deduplicated
     });
   } catch (err) {
     fs.unlink(req.file.path, () => {});

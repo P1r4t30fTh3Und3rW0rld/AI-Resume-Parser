@@ -11,6 +11,7 @@ function App() {
   const [saveStatus, setSaveStatus] = useState(null);
   const [saveError, setSaveError] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
+  const [deduplicated, setDeduplicated] = useState(false);
 
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
@@ -28,6 +29,7 @@ function App() {
       return;
     }
     setIsUploading(true);
+    setDeduplicated(false);
     const formData = new FormData();
     formData.append('resume', file);
     setUploadStatus('Uploading...');
@@ -44,6 +46,7 @@ function App() {
       if (res.ok) {
         setUploadStatus(data.message);
         setParsed(data.parsed);
+        setDeduplicated(!!data.deduplicated);
       } else {
         setUploadError(data.error || 'Upload failed');
       }
@@ -142,6 +145,7 @@ function App() {
             </button>
           </form>
           {uploadStatus && <p className="text-green-600 text-sm mt-1">{uploadStatus}</p>}
+          {deduplicated && <p className="text-blue-500 text-xs mt-1">This file already exists in the database. No duplicate was stored.</p>}
           {uploadError && <p className="text-red-500 text-sm mt-1">{uploadError}</p>}
         </section>
         {parsed && !editing && (
