@@ -52,6 +52,8 @@ const resumeSchema = new mongoose.Schema({
 
 const Resume = mongoose.model('Resume', resumeSchema);
 
+const NLP_SERVICE_URL = process.env.NLP_SERVICE_URL || 'http://localhost:8000';
+
 app.post('/upload', upload.single('resume'), async (req, res) => {
   if (!req.file) {
     return res.status(400).json({ error: 'No file uploaded or invalid file type' });
@@ -105,7 +107,7 @@ app.post('/upload', upload.single('resume'), async (req, res) => {
     form.append('file', fs.createReadStream(req.file.path), req.file.originalname);
 
     // Send to FastAPI /parse endpoint
-    const response = await axios.post('http://localhost:8000/parse', form, {
+    const response = await axios.post(`${NLP_SERVICE_URL}/parse`, form, {
       headers: form.getHeaders(),
       maxContentLength: Infinity,
       maxBodyLength: Infinity,

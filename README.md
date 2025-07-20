@@ -2,6 +2,10 @@
 
 A full-stack MERN application for uploading resumes (PDF/DOCX), extracting raw text and links using AI/NLP, and managing parsed data.
 
+## Overview
+
+AI Resume Parser is designed to help users quickly extract all the raw text and links from their resumes. It uses a Python NLP microservice for robust parsing, stores original files in MongoDB (GridFS), and provides a clean, minimal React dashboard for managing and downloading results.
+
 ## Technologies Used
 
 - **Frontend:** React.js + Tailwind CSS (UI)
