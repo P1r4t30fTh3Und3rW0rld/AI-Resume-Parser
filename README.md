@@ -11,11 +11,19 @@ A full-stack MERN application for uploading resumes (PDF/DOCX), extracting raw t
 
 ## Project Structure
 
-- `frontend/` – React app (UI)
-- `backend/` – Node.js/Express API (file upload, MongoDB, GridFS)
-- `nlp-service/` – Python FastAPI microservice (resume parsing)
+```
+frontend/    # React app (UI)
+backend/     # Node.js/Express API, MongoDB, GridFS
+nlp-service/ # Python FastAPI microservice (resume parsing)
+```
 
-## Manual Setup
+## Environment Variables
+
+- **backend/.env**
+  - `MONGO_URI` - MongoDB Atlas connection string
+- **nlp-service/.env** (optional, for future expansion)
+
+## Setup Instructions
 
 1. **Clone the repo**
 2. **Install dependencies** in each folder:
@@ -40,6 +48,13 @@ A full-stack MERN application for uploading resumes (PDF/DOCX), extracting raw t
    npm run dev
    ```
    This will launch backend, frontend, and NLP service concurrently.
+
+## Usage
+
+- Open the frontend in your browser (usually at http://localhost:3000)
+- Upload a PDF or DOCX resume
+- View the extracted raw text and links
+- Download the parsed data as JSON
 
 ## Notes
 
