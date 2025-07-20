@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import './index.css';
 
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+
 function App() {
   const [file, setFile] = useState(null);
   const [uploadStatus, setUploadStatus] = useState(null);
@@ -38,7 +40,7 @@ function App() {
     setEditing(false);
     setEditData(null);
     try {
-      const res = await fetch('http://localhost:5000/upload', {
+      const res = await fetch(`${API_URL}/upload`, {
         method: 'POST',
         body: formData,
       });
@@ -82,7 +84,7 @@ function App() {
     setSaveStatus(null);
     setSaveError(null);
     try {
-      const res = await fetch('http://localhost:5000/resume', {
+      const res = await fetch(`${API_URL}/resume`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(editData),
