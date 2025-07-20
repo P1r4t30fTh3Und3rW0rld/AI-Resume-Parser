@@ -1,0 +1,13 @@
+{
+  "name": "ai-resume-parser-root",
+  "private": true,
+  "scripts": {
+    "start:backend": "cd backend && node index.js",
+    "start:frontend": "cd frontend && npm start",
+    "start:nlp": "cd nlp-service && venv\\Scripts\\python.exe -m uvicorn main:app --reload --port 8000",
+    "dev": "concurrently \"npm run start:backend\" \"npm run start:frontend\" \"npm run start:nlp\""
+  },
+  "devDependencies": {
+    "concurrently": "^8.0.0"
+  }
+} 
