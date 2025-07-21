@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { FaApple, FaGoogle, FaXTwitter } from 'react-icons/fa6';
+import { FaApple, FaGoogle, FaXTwitter } from 'react-icons/fa';
 import { FiMail, FiLock } from 'react-icons/fi';
 
 function AuthTabs({
