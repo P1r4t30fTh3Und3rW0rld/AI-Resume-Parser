@@ -1,6 +1,6 @@
 # AI Resume Parser
 
-A full-stack MERN application for uploading resumes (PDF/DOCX), extracting raw text and links using AI/NLP, and managing parsed data.
+A full-stack AI-powered resume parser with modern authentication, file upload, and admin dashboard.
 
 ## Overview
 
@@ -8,10 +8,33 @@ AI Resume Parser is designed to help users quickly extract all the raw text and 
 
 ## Technologies Used
 
-- **Frontend:** React.js + Tailwind CSS (UI)
-- **Backend:** Node.js + Express.js (API, file upload, MongoDB, GridFS)
-- **Database:** MongoDB Atlas (cloud database, file storage with GridFS)
-- **NLP Service:** Python FastAPI (resume parsing with spaCy, PyMuPDF, docx2txt)
+- **Frontend:**
+  - React 19 (functional components, hooks)
+  - Tailwind CSS (utility-first styling)
+  - Supabase Auth (user authentication)
+  - React Hot Toast (notifications)
+  - Headless UI (accessible UI components)
+  - Framer Motion (animations)
+  - React Router DOM (routing)
+  - React Icons (iconography)
+- **Backend:**
+  - Node.js + Express.js (REST API)
+  - MongoDB Atlas (cloud database)
+  - GridFS (file storage)
+  - Multer (file uploads)
+  - JWT (admin authentication)
+  - CORS, dotenv, bcryptjs (security and config)
+- **NLP Service:**
+  - Python FastAPI (microservice)
+  - spaCy (NLP)
+  - PyMuPDF (PDF parsing)
+  - docx2txt (DOCX parsing)
+  - python-multipart (file upload handling)
+- **Features:**
+  - Modern glassmorphism UI (cribble.dev inspired)
+  - Email verification and secure login/signup
+  - Admin dashboard with file management, modals, and copy/download
+  - Responsive, accessible, and animated user experience
 
 ## Project Structure
 
@@ -21,37 +44,40 @@ backend/     # Node.js/Express API, MongoDB, GridFS
 nlp-service/ # Python FastAPI microservice (resume parsing)
 ```
 
-## Environment Variables
-
-- **backend/.env**
-  - `MONGO_URI` - MongoDB Atlas connection string
-- **nlp-service/.env** (optional, for future expansion)
-
-## Setup Instructions
-
-1. **Clone the repo**
-2. **Install dependencies** in each folder:
-   - `cd backend && npm install`
-   - `cd frontend && npm install`
-   - `cd nlp-service && pip install -r requirements.txt`
-3. **Set up environment variables**
-   - Create `.env` files in `backend/` and `nlp-service/` as needed (see code for required variables, e.g., `MONGO_URI`)
-4. **Start each service manually (in separate terminals):**
-   - Backend: `cd backend && node index.js`
-   - NLP Service: `cd nlp-service && venv\Scripts\python.exe -m uvicorn main:app --reload --port 8000` (Windows) or `source venv/bin/activate && uvicorn main:app --reload --port 8000` (Mac/Linux)
-   - Frontend: `cd frontend && npm start`
-
 ## One-Command Setup (Recommended for Dev)
 
-1. From the project root, install root dependencies:
+1. **Clone the repo**
+2. **Install all dependencies and set up node_modules:**
    ```sh
-   npm install
+   npm run predev
    ```
-2. Start all services together:
+3. **Set up the Python virtual environment for NLP service:**
+   ```sh
+   cd nlp-service
+   python -m venv venv
+   venv\Scripts\pip install -r requirements.txt
+   cd ..
+   ```
+4. **Start all services together:**
    ```sh
    npm run dev
    ```
    This will launch backend, frontend, and NLP service concurrently.
+
+## Manual Setup (Advanced/Alternative)
+
+1. **Install dependencies in each folder:**
+   ```sh
+   cd backend && npm install && cd ..
+   cd frontend && npm install && cd ..
+   cd nlp-service && pip install -r requirements.txt && cd ..
+   ```
+2. **Set up environment variables:**
+   - Create `.env` files in `backend/` and `nlp-service/` as needed (see code for required variables, e.g., `MONGO_URI`)
+3. **Start each service manually (in separate terminals):**
+   - Backend: `cd backend && node index.js`
+   - NLP Service: `cd nlp-service && venv\Scripts\python.exe -m uvicorn main:app --reload --port 8000` (Windows) or `source venv/bin/activate && uvicorn main:app --reload --port 8000` (Mac/Linux)
+   - Frontend: `cd frontend && npm start`
 
 ## Usage
 

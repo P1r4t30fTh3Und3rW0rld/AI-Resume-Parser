@@ -1,7 +1,8 @@
 {
-  "name": "ai-resume-parser-root",
+  "name": "AI resume Parser",
   "private": true,
   "scripts": {
+    "predev": "npm install && cd frontend && npm install && cd ../backend && npm install && cd ..",
     "start:backend": "cd backend && node index.js",
     "start:frontend": "cd frontend && npm start",
     "start:nlp": "cd nlp-service && venv\\Scripts\\python.exe -m uvicorn main:app --reload --port 8000",
@@ -9,5 +10,8 @@
   },
   "devDependencies": {
     "concurrently": "^8.0.0"
+  },
+  "dependencies": {
+    "react-icons": "^5.5.0"
   }
-} 
+}

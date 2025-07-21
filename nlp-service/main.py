@@ -37,20 +37,23 @@ def health():
 
 @app.post("/parse")
 async def parse_resume(file: UploadFile = File(...)):
-    suffix = mimetypes.guess_extension(file.content_type)
-    with tempfile.NamedTemporaryFile(delete=False, suffix=suffix) as tmp:
-        tmp.write(await file.read())
-        tmp_path = tmp.name
+    try:
+        suffix = mimetypes.guess_extension(file.content_type)
+        with tempfile.NamedTemporaryFile(delete=False, suffix=suffix) as tmp:
+            tmp.write(await file.read())
+            tmp_path = tmp.name
 
-    if file.content_type == "application/pdf":
-        text, links = extract_text_from_pdf(tmp_path)
-    elif file.content_type == "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
-        text, links = extract_text_from_docx(tmp_path)
-    else:
-        return JSONResponse(content={"error": "Unsupported file type"}, status_code=400)
+        if file.content_type == "application/pdf":
+            text, links = extract_text_from_pdf(tmp_path)
+        elif file.content_type == "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
+            text, links = extract_text_from_docx(tmp_path)
+        else:
+            return JSONResponse(content={"error": "Unsupported file type"}, status_code=400)
 
-    return {
-        "raw_text": text,
-        "links": links,
-        "file_type": file.content_type
-    } 
+        return {
+            "raw_text": text,
+            "links": links,
+            "file_type": file.content_type
+        }
+    except Exception as e:
+        return JSONResponse(content={"error": f"Failed to parse file: {str(e)}"}, status_code=500) 

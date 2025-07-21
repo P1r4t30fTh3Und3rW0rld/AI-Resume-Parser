@@ -9,6 +9,48 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /* Modern gradient background for the whole app */
+  background: linear-gradient(135deg, #6366f1 0%, #a21caf 100%);
+  min-height: 100vh;
+}
+
+.cribble-bg {
+  min-height: 100vh;
+  background-color: #0a0a0a;
+  background-image:
+    radial-gradient(circle at 0px 0px, rgba(255,255,255,0.15), transparent 300px),
+    radial-gradient(circle at 0px 0px, rgba(255,255,255,0.08), transparent 250px),
+    radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, 24px 24px;
+  background-position: center center, center center, 0 0;
+  background-repeat: repeat;
+}
+
+/* Glassmorphism utility - now square by default */
+.glass {
+  background: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.18);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-radius: 0; /* Square by default */
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+/* For rounded glass (navbar) */
+.glass-rounded {
+  border-radius: 1rem !important;
+}
+/* For pill-shaped glass (profile bar) */
+.glass-pill {
+  border-radius: 9999px !important;
+}
+
+/* For animated fade-in */
+.fade-in {
+  opacity: 0;
+  animation: fadeIn 1s ease-in forwards;
+}
+@keyframes fadeIn {
+  to { opacity: 1; }
 }
 
 code {
