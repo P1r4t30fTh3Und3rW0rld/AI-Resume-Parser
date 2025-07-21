@@ -34,9 +34,10 @@ function AdminPanel() {
       setLoading(true);
       try {
         const token = localStorage.getItem('adminToken');
+        const API_URL = process.env.REACT_APP_API_URL;
         const [resumesRes, filesRes] = await Promise.all([
-          fetch('/api/admin/resumes', { headers: { Authorization: `Bearer ${token}` } }),
-          fetch('/api/admin/files', { headers: { Authorization: `Bearer ${token}` } }),
+          fetch(`${API_URL}/api/admin/resumes`, { headers: { Authorization: `Bearer ${token}` } }),
+          fetch(`${API_URL}/api/admin/files`, { headers: { Authorization: `Bearer ${token}` } }),
         ]);
         if (!resumesRes.ok || !filesRes.ok) throw new Error('Unauthorized or error fetching data');
         const resumesData = await resumesRes.json();
@@ -65,7 +66,8 @@ function AdminPanel() {
     setLoading(true);
     try {
       if (logout) await logout();
-      const res = await fetch('/api/admin/login', {
+      const API_URL = process.env.REACT_APP_API_URL;
+      const res = await fetch(`${API_URL}/api/admin/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: loginEmail, password: loginPassword }),
@@ -102,8 +104,9 @@ function AdminPanel() {
 
   const handleDownload = (fileId) => {
     const token = localStorage.getItem('adminToken');
+    const API_URL = process.env.REACT_APP_API_URL;
     const a = document.createElement('a');
-    a.href = `/api/admin/files/${fileId}/download?token=${token}`;
+    a.href = `${API_URL}/api/admin/files/${fileId}/download?token=${token}`;
     a.download = '';
     a.target = '_blank';
     document.body.appendChild(a);
