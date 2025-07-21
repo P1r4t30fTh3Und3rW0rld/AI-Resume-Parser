@@ -18,8 +18,9 @@ function ResumeUpload({ onParsed }) {
     setUploading(true);
     const formData = new FormData();
     formData.append('resume', file);
+    const API_URL = process.env.REACT_APP_API_URL;
     try {
-      const res = await fetch('/upload', {
+      const res = await fetch(`${API_URL}/upload`, {
         method: 'POST',
         body: formData,
       });
