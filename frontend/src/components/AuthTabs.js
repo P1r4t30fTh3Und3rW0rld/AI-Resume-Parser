@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { FaApple, FaGoogle, FaXTwitter } from 'react-icons/fa';
+import { FaApple, FaGoogle, FaTwitter } from 'react-icons/fa';
 import { FiMail, FiLock } from 'react-icons/fi';
 
 function AuthTabs({
@@ -149,7 +149,7 @@ function AuthTabs({
           onClick={() => handleSocial('X')}
           disabled={adminLoggedIn}
         >
-          <FaXTwitter size={20} />
+          <FaTwitter size={20} />
         </button>
       </div>
     </div>
