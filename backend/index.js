@@ -18,7 +18,10 @@ const port = process.env.PORT || 5000;
 
 app.use(
   cors({
-    origin: "http://localhost:3000", // adjust as needed
+    origin: [
+      "http://localhost:3000",
+      "https://ai-resume-parser-snowy.vercel.app"
+    ],
     credentials: true,
   })
 );
